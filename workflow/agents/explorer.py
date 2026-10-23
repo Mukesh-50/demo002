@@ -25,7 +25,7 @@ If a step cannot be done, say so clearly. Do not write test code.
 
 
 async def explorer(state: TestState):
-    print("🔍 Explorer: performing the test steps in the browser...")
+    print("Explorer: performing the test steps in the browser...")
 
     async with browser_tools() as tools:
         agent = create_agent(llm, tools=tools, system_prompt=EXPLORER_PROMPT)

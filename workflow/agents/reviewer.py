@@ -36,15 +36,15 @@ Test code:
 
 
 def reviewer(state: TestState):
-    print("🧐 Reviewer: reviewing the test code...")
+    print("Reviewer: reviewing the test code...")
 
     prompt = REVIEWER_PROMPT.format(test_case=state["test_case"], test_code=state["test_code"])
     review = llm.with_structured_output(Review).invoke(prompt)
 
     if review.approved:
-        print(f"🧐 Reviewer: APPROVED - {review.feedback}")
+        print(f"Reviewer: APPROVED - {review.feedback}")
     else:
-        print(f"🧐 Reviewer: CHANGES REQUESTED\n{review.feedback}")
+        print(f"Reviewer: CHANGES REQUESTED\n{review.feedback}")
 
     return {
         "review_status": "approved" if review.approved else "changes requested",

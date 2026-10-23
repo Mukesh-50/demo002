@@ -23,15 +23,15 @@ When the test passes (or you have no runs left), reply with one sentence describ
 
 
 async def healer(state: TestState):
-    print("🩹 Healer: running the test...")
+    print("Healer: running the test...")
     save_test(state["output_file"], state["test_code"])
     passed, output = run_test(state["output_file"])
 
     if passed:
-        print("🩹 Healer: test PASSED, nothing to fix")
+        print("Healer: test PASSED, nothing to fix")
         return {"test_status": "passed", "run_output": output, "history": ["healer: ran the test, it passed"]}
 
-    print("🩹 Healer: test FAILED, fixing it...")
+    print("Healer: test FAILED, fixing it...")
 
     # The agent's own tool. It remembers the latest code and result in `latest`.
     latest = {"code": state["test_code"], "passed": False, "output": output, "runs": 0}
@@ -42,7 +42,7 @@ async def healer(state: TestState):
         if latest["runs"] >= MAX_HEAL_RUNS:
             return "No runs left. Stop and reply with a short summary."
         latest["runs"] += 1
-        print(f"🩹 Healer: trying fix #{latest['runs']}...")
+        print(f"Healer: trying fix #{latest['runs']}...")
         save_test(state["output_file"], code)
         latest["code"] = code
         latest["passed"], latest["output"] = run_test(state["output_file"])
@@ -56,7 +56,7 @@ async def healer(state: TestState):
         )
 
     summary = result["messages"][-1].content
-    print(f"🩹 Healer: test {'PASSED' if latest['passed'] else 'still FAILING'} after {latest['runs']} fix(es)")
+    print(f"Healer: test {'PASSED' if latest['passed'] else 'still FAILING'} after {latest['runs']} fix(es)")
 
     code_changed = latest["code"] != state["test_code"]
     return {

@@ -44,7 +44,7 @@ def supervisor(state: TestState):
 
     # Safety limit: stop if the team has taken too many steps
     if steps > MAX_SUPERVISOR_STEPS:
-        print(f"\n🧭 Supervisor: step limit ({MAX_SUPERVISOR_STEPS}) reached -> finish")
+        print(f"\nSupervisor: step limit ({MAX_SUPERVISOR_STEPS}) reached -> finish")
         return {"next_agent": "finish", "steps": steps}
 
     prompt = SUPERVISOR_PROMPT.format(
@@ -58,5 +58,5 @@ def supervisor(state: TestState):
     )
     decision = llm.with_structured_output(Decision).invoke(prompt)
 
-    print(f"\n🧭 Supervisor (step {steps}): {decision.next_agent} - {decision.reason}")
+    print(f"\nSupervisor (step {steps}): {decision.next_agent} - {decision.reason}")
     return {"next_agent": decision.next_agent, "steps": steps}

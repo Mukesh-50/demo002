@@ -10,6 +10,7 @@ Use ONLY the elements described in the explorer's report. They come from the rea
 
 Rules:
 - import {{ test, expect }} from '@playwright/test';
+- Use current project structure while generating new testcases.
 - One test(). Name it with the test case ID and title.
 - Use getByRole(), getByPlaceholder(), getByLabel() or getByText(). No CSS or XPath selectors.
 - Never use waitForTimeout().
@@ -35,7 +36,7 @@ def clean_code(text: str):
 
 def generator(state: TestState):
     rewriting = state["review_status"] == "changes requested"
-    print("✍️  Generator: " + ("rewriting the test with the reviewer's feedback..." if rewriting else "writing the test..."))
+    print("Generator: " + ("rewriting the test with the reviewer's feedback..." if rewriting else "writing the test..."))
 
     previous = ""
     if rewriting:

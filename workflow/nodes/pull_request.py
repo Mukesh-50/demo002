@@ -2,9 +2,7 @@
 # Then: new branch -> commit -> push -> AI-written PR description -> gh pr create
 
 import subprocess
-
 from langgraph.types import interrupt
-
 from config import BASE_BRANCH
 from workflow.llm import llm
 from workflow.state import TestState

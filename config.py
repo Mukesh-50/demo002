@@ -12,6 +12,7 @@ OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1")
 
 # Safety limits, so the agents can never loop forever
 MAX_SUPERVISOR_STEPS = 12   # how many times the supervisor may pick an agent
+
 MAX_HEAL_RUNS = 3           # how many fixed versions the healer may try
 
 # Show the browser while the agents work (set HEADLESS=true in .env to hide it)
