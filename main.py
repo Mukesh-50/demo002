@@ -1,20 +1,25 @@
-# Start here: a multi-agent team turns every manual test case in test_cases/
-# into a Playwright test, and opens a pull request for it.
+# Start here: a multi-agent team turns manual test cases into Playwright tests,
+# and opens a pull request for each one.
 #
-# Run:  python main.py
+# Run:  python main.py SCRUM-7          read the Jira story, write its test cases, then automate them
+#       python main.py SCRUM-7 SCRUM-8  several stories, one after another
+#       python main.py                  automate every test case already in test_cases/
 
 import asyncio
 import glob
 import os
+import sys
 
 from langgraph.types import Command
 
 from config import TEST_CASES_DIR, TESTS_DIR
+from workflow.agents.test_case_writer import write_test_cases
 from workflow.graph import app
+from workflow.jira import read_story
 
 
 async def run_workflow(input_file: str):
-    name = os.path.basename(input_file).replace(".txt", "").lower()  # test_cases/TC001.txt -> tc001
+    name = os.path.basename(input_file).replace(".txt", "").lower()  # test_cases/SCRUM-7-TC001.txt -> scrum-7-tc001
 
     # Each file gets its own thread_id so its pause/resume is tracked separately.
     # recursion_limit: the supervisor loop takes many graph steps, so allow more than the default 25.
@@ -51,8 +56,19 @@ async def main():
     # Print the graph as an ASCII diagram (needs: pip install grandalf)
     app.get_graph().print_ascii()
 
+    story_keys = [key.upper() for key in sys.argv[1:]]
+    if story_keys:
+        # Jira story -> manual test cases in test_cases/
+        input_files = []
+        for story_key in story_keys:
+            print(f"\n########## Jira story {story_key} ##########")
+            story = await read_story(story_key)
+            input_files += write_test_cases(story_key, story)
+    else:
+        input_files = sorted(glob.glob(f"{TEST_CASES_DIR}/*.txt"))
+
     results = {}
-    for input_file in sorted(glob.glob(f"{TEST_CASES_DIR}/TC*.txt")):
+    for input_file in input_files:
         print(f"\n########## {input_file} ##########")
         results[input_file] = await run_workflow(input_file)
 
