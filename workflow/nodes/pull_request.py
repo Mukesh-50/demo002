@@ -54,7 +54,7 @@ def git(*args):
 def create_pull_request(state: TestState):
     branch = state["branch"]
     files = [state["input_file"], state["output_file"]]
-    print(f"🔀 Creating branch {branch}...")
+    print(f"Creating branch {branch}...")
 
     pr_url = ""
     try:
@@ -70,7 +70,7 @@ def create_pull_request(state: TestState):
             print("Push failed:\n" + push.stderr)
             return {"pr_url": ""}
 
-        print("✍️  Writing the pull request description with AI...")
+        print("Writing the pull request description with AI...")
         description = llm.invoke(PR_DESCRIPTION_PROMPT.format(
             output_file=state["output_file"],
             test_case=state["test_case"],
@@ -86,7 +86,7 @@ def create_pull_request(state: TestState):
         )
         if pr.returncode == 0:
             pr_url = pr.stdout.strip()
-            print(f"✅ Pull request created: {pr_url}")
+            print(f"Pull request created: {pr_url}")
         else:
             print("Creating the pull request failed:\n" + pr.stderr)
     finally:
