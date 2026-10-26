@@ -1,0 +1,27 @@
+### Test Case: Verify error message for empty password
+
+Feature: User Login with Valid Credentials Test Type: Negative URL: https://freelance-learn-automation.vercel.app/login
+
+| Field           | Details                                   |
+| --------------- | ----------------------------------------- |
+| Test Case ID    | SCRUM-7-TC004                         |
+| Jira Reference  | SCRUM-7 / AC4                         |
+| Test Scenario   | Verify error message is shown when password field is empty. |
+| Preconditions   | None                                      |
+| Email           | admin@email.com                            |
+| Password        | (empty)                                   |
+| Expected Result | Error message 'Password is required' is displayed and user is not authenticated. |
+
+### Test Steps
+
+| Step | Action                    | Test Data       | Expected Result                 |
+| ---- | ------------------------- | --------------- | ------------------------------- |
+| 1    | Navigate to login page    | Login URL       | Login page should be displayed  |
+| 2    | Enter email               | admin@email.com | Email field contains entered value |
+| 3    | Leave password field empty| (empty)         | Password field is empty         |
+| 4    | Click Sign in button      |                 | Error message 'Password is required' is displayed |
+| 5    | Check authentication      |                 | User is not authenticated       |
+
+Pass Criteria: The test passes if the error message is displayed and user is not authenticated.
+
+Test Status: Not Run.
