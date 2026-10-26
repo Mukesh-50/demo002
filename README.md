@@ -1,7 +1,7 @@
 # Multi-Agent Test Generator with LangGraph + Playwright MCP
 
-Give it a **Jira story** (e.g. `SCRUM-7`). It reads the story through the **Atlassian MCP server**,
-writes manual test cases for its acceptance criteria, and a **team of AI agents** turns each one into a
+Give it a **Jira story** (e.g. `SCRUM-7`). It reads the story through the **Atlassian MCP server**
+(or the Jira REST API as a fallback), writes manual test cases for its acceptance criteria, and a **team of AI agents** turns each one into a
 working **Playwright** test, then opens a **pull request** for a human to review.
 
 This is the follow-up to demo001 (a fixed AI workflow). Here, an AI **supervisor** decides who works next.
@@ -24,12 +24,12 @@ This is the follow-up to demo001 (a fixed AI workflow). Here, an AI **supervisor
                                    ▼
           YOU: see the final test → "Create a pull request?"
                                    ▼
-          branch → commit → push → AI-written PR description → pull request
+          branch (in a temporary worktree) → commit → push → AI-written PR description → pull request
 ```
 
 | Agent | Type | What it does |
 |---|---|---|
-| **Test case writer** | AI + Atlassian MCP | Reads the Jira story and writes one manual test case per acceptance criterion |
+| **Test case writer** | AI + Atlassian MCP / Jira REST API | Reads the Jira story and writes one manual test case per acceptance criterion |
 | **Supervisor** | AI decision | Reads the progress and picks the next agent, or finishes |
 | **Explorer** | Agent + Playwright MCP | Performs the test steps in a real browser and reports the real page elements, on every page, including after login |
 | **Generator** | AI | Writes the TypeScript test from the Explorer's report; rewrites it if the Reviewer asks |
@@ -43,10 +43,10 @@ This is the follow-up to demo001 (a fixed AI workflow). Here, an AI **supervisor
 | **Supervisor pattern**: AI chooses the next step | `workflow/agents/supervisor.py` |
 | **Agents with tools**: the AI calls tools in a loop | `workflow/agents/explorer.py`, `healer.py` |
 | **MCP**: giving agents browser tools | `workflow/browser.py` |
-| **Remote MCP over HTTP**: reading Jira | `workflow/jira.py` |
+| **Remote MCP over HTTP** (with a REST fallback): reading Jira | `workflow/jira.py` |
 | **Structured output**: AI answers in a fixed shape | `Decision` in `supervisor.py`, `Review` in `reviewer.py` |
 | **Custom tools**: your own function as a tool | `save_and_run_test` in `healer.py` |
-| **Human-in-the-loop + PR flow** | `workflow/nodes/pull_request.py` |
+| **Human-in-the-loop + PR flow** (git worktree) | `workflow/nodes/pull_request.py` |
 | **Safety limits** | `MAX_SUPERVISOR_STEPS`, `MAX_HEAL_RUNS`, `SAFE_BROWSER_TOOLS` in `config.py` |
 
 ## Prerequisites
@@ -89,6 +89,18 @@ For each test case you will see the supervisor's decisions and each agent at wor
 At the end it shows the final test and asks: **Create a pull request?**
 
 A test case is **skipped** if its test already exists in `tests/`, or if its branch (`test/scrum-7-tc001`, ...) is already on GitHub.
+To generate a test again, delete its spec file from `tests/` (and its branch on GitHub, if there is one).
+
+### Reading Jira
+
+The story is read with the Atlassian MCP server's `getJiraIssue` tool. If the server offers no Jira tools for your
+token (an Atlassian admin setting), or the connection fails, it is read from the Jira REST API with the same token.
+
+### Pull requests keep your files
+
+The pull request branch is built in a **temporary git worktree** (a separate folder), and removed afterwards.
+Your project folder never leaves `main`, so the test cases in `test_cases/` and the generated tests in `tests/`
+always stay on disk, whether you create a pull request or not.
 
 ## Project structure
 
@@ -96,14 +108,14 @@ A test case is **skipped** if its test already exists in `tests/`, or if its bra
 main.py                     ← start here
 config.py                   ← model, safety limits, allowed browser tools, Jira settings
 test_cases/                 ← manual test cases (SCRUM-7-TC001.txt, ...)
-tests/                      ← generated Playwright tests (after the pull request is merged)
+tests/                      ← generated Playwright tests (scrum-7-tc001.spec.ts, ...)
 workflow/
 ├── state.py                ← the shared notebook all agents read and write
 ├── graph.py                ← supervisor in the middle, agents around it
 ├── decisions.py            ← skip? which agent? create the PR?
 ├── llm.py                  ← the AI model
 ├── browser.py              ← Playwright MCP connection (browser tools)
-├── jira.py                 ← Atlassian MCP connection (reads a Jira story)
+├── jira.py                 ← reads a Jira story (Atlassian MCP, Jira REST API fallback)
 ├── test_runner.py          ← save and run a test
 ├── agents/
 │   ├── test_case_writer.py ← Jira story -> manual test cases
@@ -114,7 +126,7 @@ workflow/
 │   └── healer.py
 └── nodes/
     ├── test_case.py        ← read the test case
-    └── pull_request.py     ← ask you, then branch + commit + push + PR
+    └── pull_request.py     ← ask you, then branch (in a worktree) + commit + push + PR
 .github/workflows/main.yml  ← runs the tests on every pull request
 ```
 
