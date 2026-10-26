@@ -40,3 +40,12 @@ SAFE_BROWSER_TOOLS = [
     "browser_hover",
     "browser_wait_for",
 ]
+
+# The app under test. Every generated test case starts from this URL.
+APP_URL = os.getenv("APP_URL", "https://freelance-learn-automation.vercel.app/login")
+
+# Jira stories are read through the Atlassian MCP server, logged in with your API token
+ATLASSIAN_MCP_URL = "https://mcp.atlassian.com/v1/mcp"
+ATLASSIAN_EMAIL = os.getenv("ATLASSIAN_EMAIL")
+ATLASSIAN_API_TOKEN = os.getenv("ATLASSIAN_API_TOKEN")
+ATLASSIAN_CLOUD_ID = os.getenv("ATLASSIAN_CLOUD_ID")
