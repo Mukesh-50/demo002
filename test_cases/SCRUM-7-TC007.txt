@@ -1,0 +1,23 @@
+### Test Case: Verify password is masked while typing
+
+Feature: User Login with Valid Credentials Test Type: Positive URL: https://freelance-learn-automation.vercel.app/login
+
+| Field           | Details                                   |
+| --------------- | ----------------------------------------- |
+| Test Case ID    | SCRUM-7-TC007                         |
+| Jira Reference  | SCRUM-7 / AC7                         |
+| Test Scenario   | Verify password field masks input while typing. |
+| Preconditions   | None                                      |
+| Password        | admin@123                                 |
+| Expected Result | Password field masks the entered password characters. |
+
+### Test Steps
+
+| Step | Action                    | Test Data       | Expected Result                 |
+| ---- | ------------------------- | --------------- | ------------------------------- |
+| 1    | Navigate to login page    | Login URL       | Login page should be displayed  |
+| 2    | Enter password            | admin@123       | Password field displays masked characters (e.g., dots or asterisks) |
+
+Pass Criteria: The test passes if the password field masks the entered characters while typing.
+
+Test Status: Not Run.
