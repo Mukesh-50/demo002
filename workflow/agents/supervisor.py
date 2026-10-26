@@ -47,14 +47,39 @@ def supervisor(state: TestState):
         print(f"\nSupervisor: step limit ({MAX_SUPERVISOR_STEPS}) reached -> finish")
         return {"next_agent": "finish", "steps": steps}
 
+    # Has the explorer already explored the page?
+    if state["exploration"]:
+        explored = "yes"
+    else:
+        explored = "no"
+
+    # Has the generator already written the test code?
+    if state["test_code"]:
+        has_code = "yes"
+    else:
+        has_code = "no"
+
+    # What did the reviewer say? If nothing yet, write "none".
+    if state["review_feedback"]:
+        review_feedback = state["review_feedback"]
+    else:
+        review_feedback = "none"
+
+    # What has each agent done so far? Put every entry on its own line.
+    if state["history"]:
+        history = "\n".join(state["history"])
+    else:
+        history = "nothing yet"
+
+    # Fill these values into the {placeholders} of SUPERVISOR_PROMPT
     prompt = SUPERVISOR_PROMPT.format(
-        explored="yes" if state["exploration"] else "no",
-        has_code="yes" if state["test_code"] else "no",
+        explored=explored,
+        has_code=has_code,
         review_status=state["review_status"],
-        review_feedback=state["review_feedback"] or "none",
+        review_feedback=review_feedback,
         test_status=state["test_status"],
         heal_runs=state["heal_runs"],
-        history="\n".join(state["history"]) or "nothing yet",
+        history=history,
     )
     decision = llm.with_structured_output(Decision).invoke(prompt)
 
