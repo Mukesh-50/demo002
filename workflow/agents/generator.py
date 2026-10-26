@@ -12,7 +12,7 @@ Rules:
 - import {{ test, expect }} from '@playwright/test';
 - Use current project structure while generating new testcases.
 - One test(). Name it with the test case ID and title.
-- Use getByRole(), getByPlaceholder(), getByLabel() or getByText(). No CSS or XPath selectors.
+- Use getByRole(), getByPlaceholder(), getByLabel() or getByText() if these locators cant be used then use CSS or XPath as last resort.
 - Never use waitForTimeout().
 - No if statements, try/catch or .catch(). Every step must always run.
 - Add a comment for each step, and an await expect() for each expected result.

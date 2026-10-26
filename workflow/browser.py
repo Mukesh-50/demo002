@@ -2,7 +2,6 @@
 # (navigate, click, type, snapshot, ...)
 
 from contextlib import asynccontextmanager
-
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_mcp_adapters.tools import load_mcp_tools
 

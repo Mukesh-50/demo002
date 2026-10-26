@@ -107,6 +107,17 @@ async def read_story(story_key: str):
     # This is the main function other files use.
     # Give it a story key (like "SCRUM-7") and it gives back the story as text.
 
+    # Try Way 1 first. If the MCP server cannot be reached (network hiccup, server down), use Way 2.
+    try:
+        return await read_story_from_mcp(story_key)
+    except Exception as error:
+        print(f"Jira: the Atlassian MCP server failed ({error!r}), reading the story from the Jira REST API")
+        return read_story_from_rest(story_key)
+
+
+async def read_story_from_mcp(story_key: str):
+    # Way 1: ask the Atlassian MCP server for the story.
+
     async with client.session("atlassian") as session:
         # Ask the MCP server: "What tools do you have?"
         mcp_tools = {}

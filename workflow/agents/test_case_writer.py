@@ -3,9 +3,7 @@
 
 import glob
 import os
-
 from pydantic import BaseModel, Field
-
 from config import APP_URL, TEST_CASES_DIR
 from workflow.llm import llm
 
@@ -61,6 +59,7 @@ Test Status: Not Run.
 
 Jira story:
 {story}
+
 """
 
 

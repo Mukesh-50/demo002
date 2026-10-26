@@ -19,7 +19,7 @@ You are a senior QA reviewer. Review this Playwright test against the checklist.
 Checklist:
 1. Every step of the manual test case is covered, in order.
 2. Every expected result has an await expect().
-3. Locators use getByRole(), getByPlaceholder(), getByLabel() or getByText(). No CSS or XPath.
+3. Locators use getByRole(), getByPlaceholder(), getByLabel() or getByText(). if these locators cant be used then use CSS or XPath as last resort.
 4. No waitForTimeout() or fixed sleeps.
 5. The assertions really check the expected result (not something always true).
 6. The test name contains the test case ID.

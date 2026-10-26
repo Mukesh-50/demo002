@@ -1,11 +1,14 @@
 # Human-in-the-loop: show the final test and ask before opening a pull request.
-# Then: new branch -> commit -> push -> AI-written PR description -> gh pr create
+# Then: new branch (in a temporary worktree) -> commit -> push -> AI-written PR description -> gh pr create
 
+import os
 import subprocess
+import tempfile
 from langgraph.types import interrupt
 from config import BASE_BRANCH
 from workflow.llm import llm
 from workflow.state import TestState
+from workflow.test_runner import save_test
 
 PR_DESCRIPTION_PROMPT = """
 Write a GitHub pull request description in Markdown for this AI-generated Playwright test.
@@ -56,16 +59,31 @@ def create_pull_request(state: TestState):
     files = [state["input_file"], state["output_file"]]
     print(f"Creating branch {branch}...")
 
+    # The spec is only on disk if the healer ran, so always write the final test
+    save_test(state["output_file"], state["test_code"])
+
+    # Build the PR branch in a separate temporary folder (a git worktree).
+    # Our own folder never switches branches, so test_cases/ and tests/ are never touched.
+    worktree = tempfile.mkdtemp(prefix="pr-")
     pr_url = ""
     try:
-        git("checkout", "-b", branch)
-        git("add", *files)
-        commit = git("commit", "-m", f"Add Playwright test for {state['input_file']}", "--", *files)
+        add = git("worktree", "add", "-b", branch, worktree, BASE_BRANCH)
+        if add.returncode != 0:
+            print("Creating the branch failed:\n" + add.stderr)
+            return {"pr_url": ""}
+
+        # Copy the test case and spec into the worktree, then commit them there
+        for path in files:
+            with open(path) as f:
+                save_test(os.path.join(worktree, path), f.read())
+
+        git("-C", worktree, "add", *files)
+        commit = git("-C", worktree, "commit", "-m", f"Add Playwright test for {state['input_file']}", "--", *files)
         if commit.returncode != 0:
             print("Commit failed:\n" + commit.stdout + commit.stderr)
             return {"pr_url": ""}
 
-        push = git("push", "-u", "origin", branch)
+        push = git("-C", worktree, "push", "-u", "origin", branch)
         if push.returncode != 0:
             print("Push failed:\n" + push.stderr)
             return {"pr_url": ""}
@@ -90,7 +108,7 @@ def create_pull_request(state: TestState):
         else:
             print("Creating the pull request failed:\n" + pr.stderr)
     finally:
-        # Always go back to the base branch for the next test case
-        git("checkout", BASE_BRANCH)
+        # Remove the temporary folder; the branch stays (it is pushed and has the PR)
+        git("worktree", "remove", "--force", worktree)
 
     return {"pr_url": pr_url}

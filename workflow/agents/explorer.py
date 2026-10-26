@@ -2,7 +2,6 @@
 # It performs the test steps in a real browser and reports what it saw.
 
 from langchain.agents import create_agent
-
 from workflow.browser import browser_tools
 from workflow.llm import llm
 from workflow.state import TestState
