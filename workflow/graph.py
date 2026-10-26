@@ -46,8 +46,10 @@ graph.add_conditional_edges("supervisor", route_to_agent, {
 })
 
 # Every agent reports back to the supervisor
-for agent in ["explorer", "generator", "reviewer", "healer"]:
-    graph.add_edge(agent, "supervisor")
+graph.add_edge("explorer", "supervisor")
+graph.add_edge("generator", "supervisor")
+graph.add_edge("reviewer", "supervisor")
+graph.add_edge("healer", "supervisor")
 
 graph.add_conditional_edges("ask_create_pr", check_create_pr, {"create": "create_pull_request", "skip": END})
 graph.add_edge("create_pull_request", END)
