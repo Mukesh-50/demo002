@@ -36,7 +36,7 @@ async def explorer(state: TestState):
 
     report = result["messages"][-1].content
     tool_calls = sum(1 for message in result["messages"] if message.type == "tool")
-    print(f"🔍 Explorer: done ({tool_calls} browser actions)")
+    print(f"Explorer: done ({tool_calls} browser actions)")
     return {
         "exploration": report,
         "history": [f"explorer: explored the test case in the browser ({tool_calls} browser actions)"],
