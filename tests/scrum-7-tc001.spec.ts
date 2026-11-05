@@ -4,6 +4,9 @@ test('SCRUM-7-TC001 Verify user can log in with valid credentials and log out su
   // Step 1: Navigate to login page
   await page.goto('https://freelance-learn-automation.vercel.app/login');
   await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible();
+  await expect(page.getByPlaceholder('Enter Email')).toBeVisible();
+  await expect(page.getByPlaceholder('Enter Password')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
 
   // Step 2: Enter email
   await page.getByPlaceholder('Enter Email').fill('admin@email.com');
@@ -15,16 +18,17 @@ test('SCRUM-7-TC001 Verify user can log in with valid credentials and log out su
 
   // Step 4: Click Sign in button
   await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page).toHaveURL('https://freelance-learn-automation.vercel.app/');
   await expect(page.getByText('Welcome Admin Manager to Learn Automation Courses')).toBeVisible();
 
   // Step 5: Open navigation menu
   await page.getByRole('img', { name: 'menu' }).click();
   await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible();
 
-  // Step 6: Click Sign out option
+  // Step 6: Click Sign out
   await page.getByRole('button', { name: 'Sign out' }).click();
-  await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible();
-
-  // Step 7: Check URL
   await expect(page).toHaveURL(/login/);
+  await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible();
+  await expect(page.getByPlaceholder('Enter Email')).toBeVisible();
+  await expect(page.getByPlaceholder('Enter Password')).toBeVisible();
 });

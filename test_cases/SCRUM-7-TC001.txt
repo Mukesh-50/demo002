@@ -20,9 +20,8 @@ Feature: User Login with Valid Credentials Test Type: Positive URL: https://free
 | 2    | Enter email               | admin@email.com | Email field contains entered value |
 | 3    | Enter password            | admin@123       | Password field contains entered value (masked) |
 | 4    | Click Sign in button      |                 | User is redirected to home page |
-| 5    | Open navigation menu      |                 | Navigation menu is displayed    |
-| 6    | Click Sign out option     |                 | User is logged out, redirected to login page |
-| 7    | Check URL                 |                 | URL contains 'login'           |
+| 5    | Open navigation menu      |                 | Navigation menu is displayed     |
+| 6    | Click Sign out            |                 | User is logged out, URL contains login |
 
 Pass Criteria: The test passes if the user is authenticated, redirected to home page after login, can log out, and after logout the URL contains 'login'.
 
