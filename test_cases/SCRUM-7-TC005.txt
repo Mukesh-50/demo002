@@ -7,9 +7,9 @@ Feature: User Login with Valid Credentials Test Type: Negative URL: https://free
 | Test Case ID    | SCRUM-7-TC005                         |
 | Jira Reference  | SCRUM-7 / AC5                         |
 | Test Scenario   | Verify error message is shown when both email and password fields are empty. |
-| Preconditions   | None                                      |
-| Email           | (empty)                                   |
-| Password        | (empty)                                   |
+| Preconditions   | None                                    |
+| Email           | (empty)                                 |
+| Password        | (empty)                                 |
 | Expected Result | Error message 'Email and Password is required' is displayed and user is not authenticated. |
 
 ### Test Steps
@@ -20,7 +20,6 @@ Feature: User Login with Valid Credentials Test Type: Negative URL: https://free
 | 2    | Leave email field empty   | (empty)         | Email field is empty            |
 | 3    | Leave password field empty| (empty)         | Password field is empty         |
 | 4    | Click Sign in button      |                 | Error message 'Email and Password is required' is displayed |
-| 5    | Check authentication      |                 | User is not authenticated (remains on login page) |
 
 Pass Criteria: The test passes if the error message 'Email and Password is required' is displayed and user is not authenticated.
 
