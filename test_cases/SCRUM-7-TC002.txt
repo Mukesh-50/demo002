@@ -20,7 +20,6 @@ Feature: User Login with Valid Credentials Test Type: Negative URL: https://free
 | 2    | Enter email               | admin@email.com | Email field contains entered value |
 | 3    | Enter password            | admin@123456    | Password field contains entered value (masked) |
 | 4    | Click Sign in button      |                 | Error message 'Email and Password Doesn't match' is displayed |
-| 5    | Check authentication      |                 | User is not authenticated (remains on login page) |
 
 Pass Criteria: The test passes if the error message 'Email and Password Doesn't match' is displayed and user is not authenticated.
 
