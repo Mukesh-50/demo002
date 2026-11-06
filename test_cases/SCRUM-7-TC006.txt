@@ -24,6 +24,6 @@ Feature: User Login with Valid Credentials Test Type: Positive URL: https://free
 | 6    | Check for Sign out option |                 | Sign out option is visible      |
 | 7    | Check for Log in option   |                 | Log in option is not visible    |
 
-Pass Criteria: The test passes if the navigation menu displays Sign out and does not display Log in for authenticated users.
+Pass Criteria: The test passes if Sign out is visible and Log in is not visible in the navigation menu after login.
 
 Test Status: Not Run.
