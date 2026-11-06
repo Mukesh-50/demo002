@@ -23,6 +23,7 @@ from config import ATLASSIAN_API_TOKEN, ATLASSIAN_CLOUD_ID, ATLASSIAN_EMAIL, ATL
 # We glue our email and token together like "email:token",
 # then wrap it up in base64 (a secret code Jira understands).
 email_and_token = f"{ATLASSIAN_EMAIL}:{ATLASSIAN_API_TOKEN}"
+
 secret_password = base64.b64encode(email_and_token.encode()).decode()
 
 
@@ -110,8 +111,11 @@ async def read_story(story_key: str):
     # Try Way 1 first. If the MCP server cannot be reached (network hiccup, server down), use Way 2.
     try:
         return await read_story_from_mcp(story_key)
+    
     except Exception as error:
-        print(f"Jira: the Atlassian MCP server failed ({error!r}), reading the story from the Jira REST API")
+        
+        #print(f"Jira: the Atlassian MCP server failed ({error!r}), reading the story from the Jira REST API")
+        
         return read_story_from_rest(story_key)
 
 

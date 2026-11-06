@@ -22,6 +22,6 @@ Feature: User Login with Valid Credentials Test Type: Negative URL: https://free
 | 4    | Click Sign in button      |                 | Error message 'Email and Password Doesn't match' is displayed |
 | 5    | Check authentication      |                 | User is not authenticated (remains on login page) |
 
-Pass Criteria: The test passes if the error message 'Email and Password Doesn't match' is displayed and user is not authenticated.
+Pass Criteria: The test passes if the error message is displayed and user is not authenticated.
 
 Test Status: Not Run.

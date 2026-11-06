@@ -20,6 +20,7 @@ HEADLESS = os.getenv("HEADLESS", "false").lower() == "true"
 
 # Where the manual test cases are, and where generated tests are saved
 TEST_CASES_DIR = "test_cases"
+
 TESTS_DIR = "tests"
 
 # Pull requests are opened against this branch

@@ -4,7 +4,7 @@ from workflow.state import TestState
 
 
 def read_test_case(state: TestState):
-    print(f"📄 Reading test case from {state['input_file']}")
+    print(f"Reading test case from {state['input_file']}")
     with open(state["input_file"], "r") as file:
         test_case = file.read()
 
